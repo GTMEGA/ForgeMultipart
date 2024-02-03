@@ -114,7 +114,7 @@ object ItemSawRenderer extends IItemRenderer {
     }
 
     CCRenderState.reset()
-    CCRenderState.useNormals = true
+    CCRenderState.useNormals(true)
     CCRenderState.pullLightmap()
     CCRenderState.changeTexture("microblock:textures/items/saw.png")
     CCRenderState.startDrawing()

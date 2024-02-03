@@ -38,7 +38,7 @@ object MultipartRenderer
 
     CCRenderState.reset()
     CCRenderState.pullLightmap()
-    CCRenderState.useNormals = true
+    CCRenderState.useNormals(true)
 
     val pos = new Vector3(x, y, z)
     tmpart.renderDynamic(pos, f, pass)

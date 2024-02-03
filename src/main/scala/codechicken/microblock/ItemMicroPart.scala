@@ -173,7 +173,7 @@ object ItemMicroPartRenderer extends IItemRenderer {
 
     TextureUtils.bindAtlas(0)
     CCRenderState.reset()
-    CCRenderState.useNormals = true
+    CCRenderState.useNormals(false)
     CCRenderState.pullLightmap()
     CCRenderState.startDrawing()
     val part =

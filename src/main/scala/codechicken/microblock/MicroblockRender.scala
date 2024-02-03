@@ -43,8 +43,8 @@ object MicroblockRender {
 
     TextureUtils.bindAtlas(0)
     CCRenderState.reset()
-    CCRenderState.alphaOverride = 80
-    CCRenderState.useNormals = true
+    CCRenderState.alphaOverride(80)
+    CCRenderState.useNormals(true)
     CCRenderState.startDrawing()
     part.render(Vector3.zero, -1)
     CCRenderState.draw()
