@@ -2,14 +2,18 @@ package codechicken.multipart.handler
 
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.nbt.NBTTagCompound
-import java.util.Map
+
+import java.util.{Collections, Map}
 import net.minecraft.world.chunk.Chunk
 import net.minecraft.world.ChunkPosition
 import codechicken.multipart.{MultipartHelper, TileMultipart}
 import codechicken.lib.asm.ObfMapping
+import codechicken.multipart
 import net.minecraft.world.World
+
 import scala.collection.mutable
 import codechicken.multipart.MultipartHelper.IPartTileConverter
+
 import scala.collection.JavaConversions._
 
 /** Hack due to lack of TileEntityLoadEvent in forge
@@ -19,11 +23,47 @@ object MultipartSaveLoad {
   var loadingWorld: World = _
 
   class TileNBTContainer extends TileEntity {
+    var ticks = 0
+    var failed = false
+    var loaded = false
     var tag: NBTTagCompound = _
 
     override def readFromNBT(t: NBTTagCompound) {
       super.readFromNBT(t)
       tag = t
+    }
+
+    override def updateEntity(): Unit = {
+      if (failed || loaded) {
+        return
+      }
+
+      if (tag == null) {
+        if (ticks >= 600) {
+          failed = true
+          multipart.logger.warn(s"SavedMultipart at ($xCoord, $yCoord, $zCoord) still exists after $ticks!")
+          worldObj.removeTileEntity(xCoord, yCoord, zCoord)
+        }
+        ticks += 1
+        return
+      }
+
+      if (worldObj.isRemote)
+        return
+
+      val newTile = TileMultipart.createFromNBT(tag)
+      if (newTile == null) {
+        worldObj.removeTileEntity(xCoord, yCoord, zCoord)
+        return
+      }
+
+      newTile.validate()
+      worldObj.setTileEntity(xCoord, yCoord, zCoord, newTile)
+      newTile.notifyTileChange()
+      val chunk = worldObj.getChunkFromBlockCoords(xCoord, zCoord)
+      val packet = MultipartSPH.getDescPacket(chunk, Collections.singleton[TileEntity](newTile).iterator)
+      packet.sendToChunk(worldObj, chunk.xPosition, chunk.zPosition)
+      loaded = true
     }
   }
 

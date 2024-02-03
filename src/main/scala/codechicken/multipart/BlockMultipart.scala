@@ -12,6 +12,7 @@ import net.minecraft.util.Vec3
 import net.minecraft.util.MovingObjectPosition
 import codechicken.lib.raytracer.RayTracer
 import net.minecraft.entity.player.EntityPlayer
+
 import java.util.Random
 import java.util.ArrayList
 import net.minecraft.item.ItemStack
@@ -21,6 +22,9 @@ import net.minecraft.client.renderer.texture.IIconRegister
 import codechicken.lib.render.TextureUtils
 import net.minecraft.world.IBlockAccess
 import codechicken.lib.raytracer.ExtendedMOP
+import codechicken.multipart.handler.MultipartSaveLoad.TileNBTContainer
+import net.minecraft.tileentity.TileEntity
+
 import scala.collection.JavaConversions._
 
 object BlockMultipart {
@@ -72,6 +76,8 @@ class BlockMultipart extends Block(Material.rock) {
   import BlockMultipart._
 
   override def hasTileEntity(meta: Int = 0) = true
+
+  override def createTileEntity(world: World, metadata: Int) = if (!world.isRemote) new TileNBTContainer else null
 
   override def isBlockSolid(
       world: IBlockAccess,
