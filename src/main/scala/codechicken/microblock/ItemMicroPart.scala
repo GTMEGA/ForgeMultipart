@@ -173,8 +173,10 @@ object ItemMicroPartRenderer extends IItemRenderer {
 
     TextureUtils.bindAtlas(0)
     CCRenderState.reset()
-    CCRenderState.useNormals(false)
-    CCRenderState.pullLightmap()
+    CCRenderState.useNormals(true)
+    if (t != ItemRenderType.INVENTORY) {
+      CCRenderState.pullLightmap()
+    }
     CCRenderState.startDrawing()
     val part =
       mcrClass.create(true, getMaterialID(item)).asInstanceOf[MicroblockClient]
