@@ -1,6 +1,6 @@
 // Add your dependencies here
 
 dependencies {
-    api("codechicken:codechickencore-mc1.7.10:1.3.0-mega:dev")
-    compileOnly("codechicken:notenoughitems-mc1.7.10:2.1.6-gtmega:dev")
+    api("codechicken:codechickencore-mc1.7.10:1.4.0-mega:dev")
+    compileOnly("codechicken:notenoughitems-mc1.7.10:2.2.2-mega:dev")
 }

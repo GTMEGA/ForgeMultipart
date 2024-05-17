@@ -8,6 +8,8 @@ import codechicken.lib.render.{CCRenderState, TextureUtils}
 import codechicken.lib.render.BlockRenderer.BlockFace
 import codechicken.microblock.MicroMaterialRegistry.IMicroMaterial
 
+import java.util.function.Supplier
+
 object MicroblockRender {
   def renderHighlight(
       player: EntityPlayer,
@@ -54,7 +56,9 @@ object MicroblockRender {
     glPopMatrix()
   }
 
-  val face = new BlockFace()
+  val face = ThreadLocal.withInitial[BlockFace](new Supplier[BlockFace]() {
+    override def get(): BlockFace = new BlockFace()
+  })
   def renderCuboid(
       pos: Vector3,
       mat: IMicroMaterial,
@@ -62,9 +66,10 @@ object MicroblockRender {
       c: Cuboid6,
       faces: Int
   ) {
-    CCRenderState.setModel(face)
+    val f = face.get()
+    CCRenderState.setModel(f)
     for (s <- 0 until 6 if (faces & 1 << s) == 0) {
-      face.loadCuboidFace(c, s)
+      f.loadCuboidFace(c, s)
       mat.renderMicroFace(pos, pass, c)
     }
   }

@@ -8,19 +8,27 @@ import cpw.mods.fml.relauncher.Side
 import net.minecraft.item.ItemStack
 import codechicken.lib.vec.{Cuboid6, Vector3}
 import net.minecraft.entity.player.EntityPlayer
-import codechicken.lib.render.{
-  CCRenderPipeline,
-  ColourMultiplier,
-  CCRenderState
-}
+import codechicken.lib.render.{CCRenderPipeline, CCRenderState, ColourMultiplier}
 import codechicken.microblock.handler.MicroblockProxy
 import net.minecraft.entity.Entity
-import codechicken.lib.render.uv.{UVTransformation, MultiIconTransformation}
-import cpw.mods.fml.common.registry.{GameRegistry, GameData}
+import codechicken.lib.render.uv.{MultiIconTransformation, UVTransformation}
+import cpw.mods.fml.common.registry.{GameData, GameRegistry}
+
+import java.util.function.Supplier
+
+private class ThreadState {
+  var pass = 0
+  var builder: CCRenderPipeline#PipelineBuilder = _
+}
 
 object MaterialRenderHelper {
-  private var pass = 0
-  private var builder: CCRenderPipeline#PipelineBuilder = _
+  private val threadState = ThreadLocal.withInitial[ThreadState](new Supplier[ThreadState]() {
+    override def get(): ThreadState = new ThreadState()
+  })
+  def pass = threadState.get().pass
+  def pass_=(pass: Int) = threadState.get().pass = pass
+  def builder = threadState.get().builder
+  def builder_=(builder: CCRenderPipeline#PipelineBuilder) = threadState.get().builder = builder
 
   def start(pos: Vector3, pass: Int, uvt: UVTransformation) = {
     this.pass = pass
