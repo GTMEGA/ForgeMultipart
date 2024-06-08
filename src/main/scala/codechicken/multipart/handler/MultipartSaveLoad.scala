@@ -20,6 +20,7 @@ import scala.collection.JavaConversions._
   */
 object MultipartSaveLoad {
   val converters = mutable.MutableList[IPartTileConverter[_]]()
+  var loadingWorld: World = _
 
   class TileNBTContainer extends TileEntity {
     var ticks = 0
@@ -98,6 +99,7 @@ object MultipartSaveLoad {
   }
 
   def loadTiles(chunk: Chunk) {
+    loadingWorld = chunk.worldObj
     val iterator = chunk.chunkTileEntityMap
       .asInstanceOf[Map[ChunkPosition, TileEntity]]
       .entrySet

@@ -41,6 +41,7 @@ object MultipartHelper {
     if (!tag.getString("id").equals("savedMultipart"))
       return null
 
+    MultipartSaveLoad.loadingWorld = world
     return TileMultipart.createFromNBT(tag)
   }
 
