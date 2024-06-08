@@ -135,5 +135,6 @@ object MultipartSaveLoad {
           iterator.remove()
       }
     }
+    loadingWorld = null
   }
 }

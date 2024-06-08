@@ -42,7 +42,9 @@ object MultipartHelper {
       return null
 
     MultipartSaveLoad.loadingWorld = world
-    return TileMultipart.createFromNBT(tag)
+    val result = TileMultipart.createFromNBT(tag)
+    MultipartSaveLoad.loadingWorld = null
+    return result
   }
 
   /** Note. This method should only be used to send tiles that have been created
