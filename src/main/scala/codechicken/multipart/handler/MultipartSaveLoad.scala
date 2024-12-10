@@ -33,6 +33,16 @@ object MultipartSaveLoad {
       tag = t
     }
 
+    override def writeToNBT(t : NBTTagCompound) {
+      if (tag != null) {
+        val keys = tag.func_150296_c.asInstanceOf[Set[String]]
+        for (key: String <- keys) {
+          t.setTag(key, tag.getTag(key).copy())
+        }
+      }
+      super.writeToNBT(t)
+    }
+
     override def updateEntity(): Unit = {
       if (failed || loaded) {
         return

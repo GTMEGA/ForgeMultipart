@@ -1,5 +1,7 @@
 package codechicken.multipart.minecraft;
 
+import codechicken.multipart.handler.MultipartSaveLoad;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 import codechicken.lib.packet.PacketCustom;
@@ -20,5 +22,10 @@ public class MinecraftMultipartMod {
         MinecraftForge.EVENT_BUS.register(new EventHandler());
         PacketCustom.assignHandler(this, new McMultipartSPH());
         if (FMLCommonHandler.instance().getSide().isClient()) PacketCustom.assignHandler(this, new McMultipartCPH());
+    }
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        MultipartSaveLoad.registerTileClass(MultipartSaveLoad.TileNBTContainer.class);
     }
 }
